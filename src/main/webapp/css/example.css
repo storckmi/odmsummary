@@ -1,0 +1,61 @@
+body {
+    margin:20px 0px 0px 20px;
+    list-style-type:none;
+    font-family: Verdana, Geneva, "DejaVu Sans", sans-serif;
+    background-color: #FCFCFC;
+}
+
+label {
+    width: 150px;;
+    display: block;
+    float: left;
+}
+
+.itemRow {
+    width: 100%;
+    float: left;
+    margin-top: 5px;
+}
+
+.textfield {
+    width: 300px;
+    font-family: Verdana, Geneva, "DejaVu Sans", sans-serif;
+    float: left;
+    margin-bottom: 5px;
+}
+
+input[type=text] {
+        border: #c8c8c8 1px solid;
+}
+input[type=password] {
+        border: #c8c8c8 1px solid;
+}
+
+td {
+    text-align: center;
+}
+
+.link {
+color: #62778c;
+text-decoration: none;
+}
+
+.link a:link {
+color: #62778c;
+text-decoration: none;
+}
+
+.link a:visited {
+color: #62778c;
+text-decoration: none;
+}
+
+.link a:hover {
+color: #13304c;
+text-decoration: underline;
+}
+
+#comparedItems .ui-tabs-panel {
+    width: 90%;
+    overflow-x: auto;
+}

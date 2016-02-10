@@ -1,0 +1,80 @@
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@page contentType="text/html; UTF-8" pageEncoding="UTF-8"%>
+
+<c:set var="formWidth" value="${tableStructure.getIdenticalFormWidth()}"/>
+<c:if test="${studyForms != null && studyForms.isEmpty() == false && formWidth != null && formWidth.isEmpty() == false}"> 
+    <div id="studyForms" style="width: 100%; float: left; margin-top: 10px;">
+        
+        <a id="downloadLink" style="display:none;"></a>
+        <button style="margin-bottom: 10px;" onclick="tableToExcel('exportIdenticalTable', 'IdenticalItems', 'IdenticalItems.xls')">Export to Excel</button>
+        (only works in Firefox 28+ and Google Chrome 35+)
+        <table id="exportIdenticalTable" border="1" rules="all" style="width: 95%; float: left;">
+            <c:set var="tableWidth" value="0"/>
+            <c:forEach items="${formWidth}" var="structureItem">
+                <c:set var="tableWidth" value="${tableWidth + structureItem.value}"/> 
+            </c:forEach>
+            <colgroup>
+                <col width="250px" span="${tableWidth + 1}">
+            </colgroup>
+            <tr>
+                <th rowspan="2">Item</th>
+                <th rowspan="2">UMLS Codelist</th>
+                <c:forEach items="${studyForms}" var="studyForm">
+                    <c:set var="studyWidth" value="0"/>
+                    <c:forEach items="${studyForm.value}" var="form">
+                        <c:set var="studyWidth" value="${formWidth[form.toString()] + studyWidth}"/>
+                    </c:forEach>
+                    <th title="Study" colspan="${studyWidth}">${studyForm.key.getName()}</th>
+                </c:forEach>
+                <th rowspan="2">Number of marked forms</th>
+            </tr>
+            <tr>
+                <c:forEach items="${studyForms}" var="studyForm">
+                    <c:forEach items="${studyForm.value}" var="form">
+                        <th title="Form" colspan="${formWidth[form.toString()]}">
+                            ${form.getName()}
+                        </th>
+                    </c:forEach>
+                </c:forEach>
+            </tr>
+            <c:set var="identical" value="<%=de.imi.odmtoolbox.model.ODMCompareType.IDENTICAL%>"/>
+
+            <c:forEach items="${comparedItems[identical]}" var="comparedItem"> 
+                <tr>
+                    <td>
+                        <span title="<c:out value="Datatype: ${comparedItem.getItem().getDataType().toString()}"/>">
+                            <c:out value="Name: ${comparedItem.getItem().getName()}"/>
+                        </span>
+                    </td>
+                    <td>
+                        <c:forEach items="${comparedItem.getItem().getUmlsCodeList()}" var="umlsCode">
+                            <span onmouseover="showTooltip($(this))"><c:out value="${umlsCode.getCode()}"/></span>
+                        </c:forEach>
+                    </td>
+                    <c:set var="formCount" value="0"/> 
+                    <c:forEach items="${comparedItem.getIdenticalFormItems()}" var="form">
+                        <c:if test="${form.value.size() eq 0}">
+                            <td colspan="${formWidth[form.key.toString()]}"></td>
+                        </c:if>
+                        <c:if test="${form.value.size() > 0}">
+                            <c:set var="formCount" value="${formCount +1}"/> 
+                        </c:if>
+                        <c:forEach items="${form.value}" var="item"> 
+                            <td colspan="${formWidth[form.key.toString()] / form.value.size() }">
+                                <span title="<c:out value="Unique identifier: ${item.getOID()}"/>">
+                                    x
+                                </span>
+                            </td>
+                        </c:forEach>
+                    </c:forEach>
+                            <td><c:out value="${formCount}"/></td>
+                </tr>
+            </c:forEach>
+        </table>
+    </div>
+</c:if>
+<c:if test="${studyForms == null || studyForms.isEmpty() == true || formWidth == null || formWidth.isEmpty() == true}">
+    <p>The submitted ODM-Forms do not contain any identical items.</p>
+</c:if>  
