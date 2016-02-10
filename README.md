@@ -1,11 +1,11 @@
 # Requirements
 
 * The software is tested in the following environment:
-* Maven 3.3.9 (http://archive.apache.org/dist/maven/maven-3/3.3.9/)
-* Apache Tomcat 7.0.50 (http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.50/)
-* Spring Framework Agent 2.5.6 (http://mvnrepository.com/artifact/org.springframework/spring-agent/2.5.6)
-* MySQL 5.5 (https://dev.mysql.com/downloads/windows/installer/5.5.html)
-* The CDISC ODM standards are excluded because of Terms & Conditions of the CDISC. You can download them on http://www.cdisc.org/odm.
+* [Maven 3.3.9](http://archive.apache.org/dist/maven/maven-3/3.3.9/)
+* [Apache Tomcat 7.0.50](http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.50/)
+* [Spring Framework Agent 2.5.6](http://mvnrepository.com/artifact/org.springframework/spring-agent/2.5.6)
+* [MySQL 5.5](https://dev.mysql.com/downloads/windows/installer/5.5.html)
+* The CDISC ODM standards are excluded because of Terms & Conditions of the CDISC. You can download them on [ODM standards](http://www.cdisc.org/odm).
 
 # Getting started
 
