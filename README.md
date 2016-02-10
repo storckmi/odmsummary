@@ -21,5 +21,6 @@ The software is tested in the following environment:
 
 # Licensing
 
-&copy; 2016 Institute of Mediccal Informatics, University of Münster.
+&copy; 2016 Institute of Medical Informatics, University of Münster.
+
 ODMSummary is licensed under the Apache License, Version 2.0. See LICENSE for the full license text.
