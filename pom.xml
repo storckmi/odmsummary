@@ -129,11 +129,6 @@
             <version>1.0.b2</version>
         </dependency>
         <dependency>
-            <groupId>de.unimuenster.imi</groupId>
-            <artifactId>org.cdisc.odm.v132</artifactId>
-            <version>1.1.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
             <version>1.1</version>
@@ -275,7 +270,7 @@
                 </executions>
             </plugin>
         </plugins>
-        <finalName>ODMToolbox</finalName>
+        <finalName>ODMSummary</finalName>
     </build>
     <repositories>
         <repository>
@@ -291,20 +286,6 @@
             <name>Google Maven Snapshot Repository</name>
             <snapshots>
                 <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>imi-internal-repository</id>
-            <name>IMI-internal maven repos</name>
-            <url>https://codecheck.uni-muenster.de/artifactory/list/imi-internal-repository/</url>
-            <layout>default</layout>
-            <releases>
-                <enabled>true</enabled>
-                <checksumPolicy>warn</checksumPolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <checksumPolicy>warn</checksumPolicy>
             </snapshots>
         </repository>
     </repositories>
