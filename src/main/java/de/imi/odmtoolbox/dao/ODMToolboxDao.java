@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Provides CRUD methods for all daos.
  *
  */
-@Transactional
 public interface ODMToolboxDao<T>
 {
     

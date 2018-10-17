@@ -22,7 +22,7 @@
        http://www.springframework.org/schema/task/spring-task.xsd
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
  
-  <!-- Use @Component annotations for bean definitions -->
+    <!-- Use @Component annotations for bean definitions -->
     <context:component-scan base-package="de.imi.odmtoolbox.validator"/>
     <context:component-scan base-package="de.imi.odmtoolbox.auth"/>
     <context:component-scan base-package="de.imi.odmtoolbox.controller"/>
@@ -36,32 +36,32 @@
     <util:properties id="propertyConfigurer" location="classpath:odmtoolbox.properties"/>
     <context:property-placeholder properties-ref="propertyConfigurer" />
     
-  <!-- Use @Controller annotations for MVC controller definitions -->
-  <mvc:annotation-driven />
-  <context:annotation-config />
-  <task:annotation-driven/>
+    <!-- Use @Controller annotations for MVC controller definitions -->
+    <mvc:annotation-driven />
+    <context:annotation-config />
+    <task:annotation-driven/>
             
-  <bean id="tilesConfigurer" 
-      class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
-    <property name="definitions">
-      <list>
-        <value>/WEB-INF/tiles-def.xml</value>
-      </list>
-    </property>
-  </bean>   
+    <bean id="tilesConfigurer" 
+          class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+        <property name="definitions">
+            <list>
+                <value>/WEB-INF/tiles-def.xml</value>
+            </list>
+        </property>
+    </bean>   
   
-<!-- View resolver -->
- <bean class=
+    <!-- View resolver -->
+    <bean class=
      "org.springframework.web.servlet.view.InternalResourceViewResolver">
-   <property name="prefix" value="/WEB-INF/"/>
-   <property name="suffix" value=".jsp"/>
- </bean>
+        <property name="prefix" value="/WEB-INF/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
  
-<bean id="multipartResolver"
-    class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 
-    <!-- one of the properties available; the maximum file size in bytes -->
-    <property name="maxUploadSize" value="200000000"/>
-</bean>
+        <!-- one of the properties available; the maximum file size in bytes -->
+        <property name="maxUploadSize" value="200000000"/>
+    </bean>
  
 </beans>

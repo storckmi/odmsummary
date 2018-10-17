@@ -9,7 +9,6 @@
         <c:forEach items="${fileErrors}" var="file">
             <p style="color: red;"><b>${file.key}</b></p>
             <c:forEach items="${file.value}" var="error">
-                <p>Line: ${error.getLineNumber()}, Column: ${error.getColumnNumber()}</p>
                 <p>Message: ${error.getMessage()}</p>
             </c:forEach>
         </c:forEach>

@@ -41,9 +41,17 @@ public class ODMStudyEvent {
         }
         return items;
     }
+    
+    public List<ODMItem> getAllItems() {
+        List<ODMItem> items = new ArrayList<>();
+        for (ODMStudyEventODMForm form : getForms()) {
+            items.addAll(form.getForm().getAllItems());
+        }
+        return items;
+    }
 
     public Integer getItemCount() {
-        return getItems().size();
+        return getAllItems().size();
     }
 
     public Integer getCodeListItemCount() {

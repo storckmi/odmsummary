@@ -20,24 +20,54 @@
     <context:component-scan base-package="de.imi.odmtoolbox.dao"/>
     <context:component-scan base-package="de.imi.odmtoolbox.dao.impl"/>
     <context:component-scan base-package="de.imi.odmtoolbox.library"/>
- 
-  <!-- Add JPA support -->
-  <bean id="emf_odmtoolbox" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-    <property name="loadTimeWeaver">
-        <bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver"/>
-    </property>
-    <property name="persistenceXmlLocation"
-        value="classpath:META-INF/persistence.xml" />
-  </bean>
+    
+    <bean id="abstractDataSource" abstract="true" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="user" value="odmsummary"/>
+        <property name="password" value="odmsummary"/>
+        <property name="initialPoolSize" value="50" />
+        <property name="minPoolSize" value="50" />
+        <property name="maxPoolSize" value="150" />
+        <property name="acquireIncrement" value="1" />
+        <!-- Be sure that the properties 'idleConnectionTestPeriod' and 'maxIdleTimeExcessConnections' are lower (in seconds) than the timeout of the connected database(s) -->
+        <property name="idleConnectionTestPeriod" value="1800" />
+        <property name="maxIdleTimeExcessConnections" value="1800" />
+        <property name="testConnectionOnCheckin" value="true" />
+    </bean>
+    
+    <bean id="odmToolboxDataSource" parent="abstractDataSource">
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/odmtoolbox?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8"/>
+    </bean>
+    
+    <!-- Add JPA support -->
+    <bean id="odmToolbox" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter" />
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <!-- [bt] for developement purposes: set 'ddl-generation' to 'create-tables' to tell the JPA provider to create tables on its own
+                Don't forget to align this setting in the persistence.xml as well!
+                <prop key="eclipselink.ddl-generation">none</prop>
+                -->
+                <prop key="eclipselink.weaving">static</prop>
+                <prop key="eclipselink.ddl-generation">create-tables</prop>
+            </props>
+        </property>
+        <property name="dataSource" ref="odmToolboxDataSource"/>
+        <property name="persistenceXmlLocation"
+                  value="classpath:META-INF/persistence.xml" />
+    </bean>
   
-  <!-- Add Transaction support -->
-  <bean id="myTxManagerODMToolBox"
-     class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="emf_odmtoolbox"/>
-  </bean>
+    <!-- Add Transaction support -->
+    <bean id="transactionManager"
+          class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="odmToolbox"/>
+        <qualifier value="odmToolbox"/>
+    </bean>
   
-  <!-- Use @Transaction annotations for managing transactions -->
-  <tx:annotation-driven transaction-manager="myTxManagerODMToolBox" />
+    <!-- Use @Transaction annotations for managing transactions -->
+    <tx:annotation-driven/>
   
   <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/> 
 </beans>

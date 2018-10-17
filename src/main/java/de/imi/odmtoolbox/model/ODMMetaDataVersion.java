@@ -55,9 +55,17 @@ public class ODMMetaDataVersion {
         }
         return items;
     }
+    
+    public List<ODMItem> getAllItems() {
+        List<ODMItem> items = new ArrayList<>();
+        for (ODMProtocol protocol : getProtocols()) {
+            items.addAll(protocol.getAllItems());
+        }
+        return items;
+    }
 
     public Integer getItemCount() {
-        return getItems().size();
+        return getAllItems().size();
     }
 
     public Integer getCodeListItemCount() {

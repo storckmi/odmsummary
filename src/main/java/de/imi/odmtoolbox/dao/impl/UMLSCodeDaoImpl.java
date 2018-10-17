@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UMLSCodeDaoImpl extends ODMToolboxDaoImpl<UMLSCode> implements UMLSCodeDao {
 
     @Override
-    @Transactional
     public UMLSCode getUMLSCodeByCode(String code) {
         try {
             TypedQuery<UMLSCode> query = odmToolboxEntityManager.createQuery(

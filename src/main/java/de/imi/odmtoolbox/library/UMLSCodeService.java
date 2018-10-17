@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class UMLSCodeService {
 
     // The base URL of the webservice
-    private final String baseURL = "";
+    private final String baseURL = "http://umls.uni-muenster.de/index.php?CUI=";
 
     public UMLSCodeService() {
 

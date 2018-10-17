@@ -68,7 +68,7 @@
         var contextPath = "${pageContext.request.contextPath}";
         $.ajax({
             method: "POST",
-            url: contextPath + "/summary/getUMLSCode.html",
+            url: contextPath + "/getUMLSCode.html",
             data: {umlsCode: $(umlsCode).html()},
             dataType: "html"
           }).done(function(data) {

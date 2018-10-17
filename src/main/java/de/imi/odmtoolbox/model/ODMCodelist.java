@@ -19,7 +19,14 @@ public class ODMCodelist {
 
     public ODMCodelist() {
     }
-
+    
+    public ODMCodelist(String oid, String name, ODMItemDataType dataType) {
+        this.oid = oid;
+        this.name = name;
+        this.dataType = dataType;
+        this.codelistItems = new ArrayList<>();
+    }
+    
     public ODMCodelist(String oid, String name, ODMItemDataType dataType, List<ODMCodelistItem> codelistItems) {
         this.oid = oid;
         this.name = name;
@@ -75,7 +82,8 @@ public class ODMCodelist {
             ODMItemDataType codelistDataType = ODMItemDataType.fromString(codelist.getAttribute("DataType"));
             NodeList codelistItems = codelist.getElementsByTagName("CodeListItem");
             NodeList enumeratedItems = codelist.getElementsByTagName("EnumeratedItem");
-            ODMCodelist odmCodelist = null;
+            
+            ODMCodelist odmCodelist = new ODMCodelist(codelistOID, codelistName, codelistDataType);
             // If the codelist contains codelist items parse and attach them
             if (codelistItems.getLength() != 0) {
                 odmCodelist = new ODMCodelist(codelistOID, codelistName, codelistDataType, ODMCodelistItem.parseCodelistItems(codelistItems, umlsCodeDao));

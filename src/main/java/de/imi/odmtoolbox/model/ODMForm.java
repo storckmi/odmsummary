@@ -61,7 +61,7 @@ public class ODMForm {
     }
 
     public Integer getItemCount() {
-        return getItems().size();
+        return getAllItems().size();
     }
 
     public Integer getCodeListItemCount() {

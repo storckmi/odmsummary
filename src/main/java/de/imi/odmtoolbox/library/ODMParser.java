@@ -1,9 +1,8 @@
 package de.imi.odmtoolbox.library;
 
-import de.imi.odmtoolbox.dao.UMLSCodeDao;
-import de.imi.odmtoolbox.model.ODMStudy;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletContext;
@@ -35,8 +34,6 @@ public class ODMParser {
     @Autowired
     ServletContext servletContext;
 
-    @Autowired
-    private UMLSCodeDao umlsCodeDao;
     private DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
     private DocumentBuilder documentBuilder;
     private List<SAXException> parseErrors = new ArrayList<>();
@@ -69,15 +66,32 @@ public class ODMParser {
     }
 
     /**
-     * Parses a given ODm file into a {@link Document} and collects the errors.
+     * Parses a given ODM file into a {@link Document} and collects the errors.
      *
      * @param odmFile The ODM file which should be parsed.
      * @return The parsed {@link Document}.
      */
     public Document parseODMFile(MultipartFile odmFile) {
+        try {
+            return parseODMFile(odmFile.getInputStream());
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Parses a given ODM file as InputStream into a {@link Document} and
+     * collects the errors.
+     *
+     * @param odmFileInputStream The ODM file as InputStream which should be
+     * parsed.
+     * @return The parsed {@link Document}.
+     */
+    public Document parseODMFile(InputStream odmFileInputStream) {
         Document doc = null;
         try {
-            doc = documentBuilder.parse(odmFile.getInputStream());
+            doc = documentBuilder.parse(odmFileInputStream);
         } catch (SAXException parseError) {
             addError(parseError);
         } catch (IOException ioException) {
@@ -87,46 +101,79 @@ public class ODMParser {
     }
 
     /**
-     * Validates a given {@link Document} and retruns all errors.
+     * Validates a given {@link Document} and returns all errors.
      *
      * @param document The {@link Document} which should be validated.
      * @return The list of errors for the given {@link Document}.
      */
     public List<SAXException> isValid(Document document) {
-        try {
-            File schemaLocation = null;
-            Element odmElement = (Element) document.getElementsByTagName("ODM").item(0);
-            switch (odmElement.getAttribute("ODMVersion")) {
-                case "1.3":
-                case "1.3.1":
-                    schemaLocation = new File(servletContext.getRealPath("xsd") + "/odm1-3-1/ODM1-3-1.xsd");
-                    break;
-                case "1.3.2":
-                    schemaLocation = new File(servletContext.getRealPath("xsd") + "/odm1-3-2/ODM1-3-2.xsd");
-                    break;
-                default:
-                    throw (new SAXParseException("ODM Version " + odmElement.getAttribute("ODMVersion") + " is not supported", null, null, -1, -1));
+        if (document != null) {
+            try {
+                File schemaLocation = null;
+                Element odmElement = (Element) document.getElementsByTagName("ODM").item(0);
+                if (odmElement != null) {
+                    switch (odmElement.getAttribute("ODMVersion")) {
+                        case "1.3":
+                        case "1.3.1":
+                            String path = servletContext.getRealPath("/xsd") + "/odm1-3-1/ODM1-3-1.xsd";
+                            schemaLocation = new File(path);
+                            break;
+                        case "1.3.2":
+                            schemaLocation = new File(servletContext.getRealPath("/xsd") + "/odm1-3-2/ODM1-3-2.xsd");
+                            break;
+                        default:
+                            throw (new SAXParseException("ODM Version " + odmElement.getAttribute("ODMVersion") + " is not supported", null, null, -1, -1));
+                    }
+                } else {
+                    throw (new SAXParseException("Element with tag name 'ODM' not readable", null, null, -1, -1));
+                }
+
+                SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
+                Schema schema = schemaFactory.newSchema(schemaLocation);
+                documentBuilderFactory.setSchema(schema);
+                Validator schemaValidator = schema.newValidator();
+                schemaValidator.setErrorHandler(new ODMErrorHandler(this));
+
+                DOMSource source = new DOMSource(document);
+                schemaValidator.validate(source);
+
+                // Validate data types of the codelists
+                NodeList codeLists = document.getElementsByTagName("CodeList");
+                // Loop through all existing codelists
+                for (int i = 0; i < codeLists.getLength(); i++) {
+                    // Loop through all child nodes of the codelist
+                    for (Node codeListItem = codeLists.item(i).getFirstChild(); codeListItem != null; codeListItem = codeListItem.getNextSibling()) {
+                        // Ignore text nodes like newlines
+                        if (codeListItem.getNodeType() == Node.ELEMENT_NODE) {
+                            // Validate all codelistitems against the codelist's data type
+                            switch (codeLists.item(i).getAttributes().getNamedItem("DataType").getNodeValue().toLowerCase()) {
+                                case "integer":
+                                    try {
+                                        Integer.parseInt(codeListItem.getAttributes().getNamedItem("CodedValue").getNodeValue());
+                                    } catch (NumberFormatException e) {
+                                        this.addError(new SAXException(String.format("The Datatype of the CodeList with OID:\"%s\" is \"integer\" but the CodedValue \"%s\" is not \"integer\".", codeLists.item(i).getAttributes().getNamedItem("OID").getNodeValue(), codeListItem.getAttributes().getNamedItem("CodedValue").getNodeValue())));
+                                    }
+                                    break;
+                                case "float":
+                                    try {
+                                        Float.parseFloat(codeListItem.getAttributes().getNamedItem("CodedValue").getNodeValue());
+                                    } catch (NumberFormatException e) {
+                                        this.addError(new SAXException(String.format("The Datatype of the CodeList with OID:\"%s\" is \"float\" but the CodedValue \"%s\" is not \"float\".", codeLists.item(i).getAttributes().getNamedItem("OID").getNodeValue(), codeListItem.getAttributes().getNamedItem("CodedValue").getNodeValue())));
+                                    }
+                                    break;
+                                default:
+                            }
+                        }
+                    }
+                }
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            } catch (SAXException saxException) {
+                this.addError(saxException);
             }
-
-            SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
-            Schema schema = schemaFactory.newSchema(schemaLocation);
-            documentBuilderFactory.setSchema(schema);
-            Validator schemaValidator = schema.newValidator();
-            schemaValidator.setErrorHandler(new ODMErrorHandler(this));
-
-            DOMSource source = new DOMSource(document);
-            schemaValidator.validate(source);
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        } catch (SAXException saxException) {
-            this.addError(saxException);
         }
+
         return clearAndReturnParseErrors();
-
-    }
-
-    public ODMStudy getStudy(Document doc) {
-        return ODMStudy.parseStudyFromDocument(doc, this.umlsCodeDao);
     }
 
     protected void addError(SAXException parseError) {

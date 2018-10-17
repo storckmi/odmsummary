@@ -39,8 +39,16 @@ public class ODMProtocol {
         return items;
     }
 
+    public List<ODMItem> getAllItems() {
+        List<ODMItem> items = new ArrayList<>();
+        for (ODMProtocolODMStudyEvent studyEvent : getStudyEvents()) {
+            items.addAll(studyEvent.getStudyEvent().getAllItems());
+        }
+        return items;
+    }
+        
     public Integer getItemCount() {
-        return getItems().size();
+        return getAllItems().size();
     }
 
     public Integer getCodeListItemCount() {

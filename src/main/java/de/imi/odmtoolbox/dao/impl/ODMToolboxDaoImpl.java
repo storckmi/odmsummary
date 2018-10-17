@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Implements CRUD methods for all daos.
  *
  */
-@Transactional
 @Component
 public abstract class ODMToolboxDaoImpl<T> implements ODMToolboxDao<T> {   
     // Provides the EntityManager, which manages the persistence layer
@@ -50,25 +49,27 @@ public abstract class ODMToolboxDaoImpl<T> implements ODMToolboxDao<T> {
     }
 
     @Override
+    @Transactional
     public void persist (T element) 
     {
        odmToolboxEntityManager.persist(element);
     }
 
     @Override
+    @Transactional
     public void merge(T element) 
     {
        odmToolboxEntityManager.merge(element);
     }
     
     @Override
+    @Transactional
     public void remove (T element)
     {
         odmToolboxEntityManager.remove(odmToolboxEntityManager.merge(element));
     } 
     
     @Override
-    @Transactional
     public T getElementById(Long id) 
     {
         TypedQuery<T> query = odmToolboxEntityManager.createQuery(
@@ -90,7 +91,6 @@ public abstract class ODMToolboxDaoImpl<T> implements ODMToolboxDao<T> {
     }
 
     @Override
-    @Transactional
     public List<T> getAllElements() 
     {
         TypedQuery<T> query = odmToolboxEntityManager.createQuery(
