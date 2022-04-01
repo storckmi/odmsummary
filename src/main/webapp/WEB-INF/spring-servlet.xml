@@ -40,7 +40,10 @@
     <mvc:annotation-driven />
     <context:annotation-config />
     <task:annotation-driven/>
-            
+
+    <mvc:resources location="/css/" mapping="css/**"/>
+    <mvc:resources location="/js/" mapping="js/**"/>
+     
     <bean id="tilesConfigurer" 
           class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
         <property name="definitions">

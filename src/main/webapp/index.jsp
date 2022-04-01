@@ -3,4 +3,4 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@page contentType="text/html; UTF-8" pageEncoding="UTF-8"%>
 
-<c:redirect url="/summary.html"/>
+<c:redirect url="/summary"/>

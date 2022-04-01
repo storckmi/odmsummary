@@ -81,16 +81,8 @@ public class UMLSCodeService {
         String result = "";
         try {
             umlsCodeInformation = doRequest(UMLSCode);
-            String preferredName = umlsCodeInformation.getString("STR").replaceAll("\\<[^>]*>", "");
-            preferredName = preferredName.substring(1, preferredName.length() - 1);
-            if (preferredName.isEmpty() == false) {
-                preferredName = preferredName.substring(1, preferredName.length() - 1);
-            }
-            String description = umlsCodeInformation.getString("DEF").replaceAll("\\<[^>]*>", "");
-            description = description.substring(1, description.length() - 1);
-            if (description.isEmpty() == false) {
-                description = description.substring(1, description.length() - 1);
-            }
+            String preferredName = umlsCodeInformation.getJSONArray("STR").get(0).toString().replaceAll("\\<[^>]*>", "");
+            String description = umlsCodeInformation.getJSONArray("DEF").get(0).toString().replaceAll("\\<[^>]*>", "");
             if (description.isEmpty() == true && preferredName.isEmpty() == true) {
                 result = "No description available for this UMLS code";
             } else if (description.isEmpty() == true) {

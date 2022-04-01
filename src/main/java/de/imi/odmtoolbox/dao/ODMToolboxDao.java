@@ -2,7 +2,6 @@ package de.imi.odmtoolbox.dao;
 
 import java.util.Collection;
 import java.util.List;
-import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -15,28 +14,28 @@ public interface ODMToolboxDao<T>
 {
     
    /**
-    * Persists a object which is defined in the model class of the given type <T>.
+    * Persists a object which is defined in the model class of the given type T.
     *
-    * @param element The <T> object, which will be added to the database.
+    * @param element The T object, which will be added to the database.
     */
     public void persist (T element);
 
    /**
-    * Persists a object which is defined in the model class of the given type <T>.
+    * Persists a object which is defined in the model class of the given type T.
     *
-    * @param element The <T> object, which will be changed in the database.
+    * @param element The T object, which will be changed in the database.
     */
     public void merge(T element);
     
     /**
-     * Removes a object which is defined in the model class of the given type <T>.
+     * Removes a object which is defined in the model class of the given type T.
      *
-     * @param element The <T> object, which will be removed in the database.
+     * @param element The T object, which will be removed in the database.
      */
     public void remove (T element);
     
     /**
-     * Searches for a element of type <T> by id.
+     * Searches for a element of type T by id.
      *
      * @param id Id of the searched element.
      * 
@@ -45,7 +44,7 @@ public interface ODMToolboxDao<T>
     public T getElementById(Long id);
     
     /**
-     * Searches for set of elements of type <T> by id.
+     * Searches for set of elements of type T by id.
      * 
      * @param ids   Ids of the searched elements.
      * 
@@ -54,9 +53,9 @@ public interface ODMToolboxDao<T>
     public Collection<T> getElementsById(Collection<Long> ids);
 
     /**
-     * Returns all elements of Type <T> in the Database.
+     * Returns all elements of Type T in the Database.
      *
-     * @return All elements of type <T> within the database.
+     * @return All elements of type T within the database.
      */
     public List<T> getAllElements();
 }

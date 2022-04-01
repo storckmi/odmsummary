@@ -6,7 +6,7 @@
 <tiles:insertDefinition name="main" flush="true">
     <tiles:putAttribute name="content">
         <h1>ODM Summary</h1>
-        <form style="width: 100%; float: left;" enctype="multipart/form-data" method="POST" action="summary.html">         
+        <form style="width: 100%; float: left;" enctype="multipart/form-data" method="POST" action="summary">         
             <div id="odmFiles" style="width: 100%; float:left;">
                 <label for="image">ODM Files:</label>
                 <div style="float:left">
@@ -68,7 +68,7 @@
         var contextPath = "${pageContext.request.contextPath}";
         $.ajax({
             method: "POST",
-            url: contextPath + "/getUMLSCode.html",
+            url: contextPath + "/getUMLSCode",
             data: {umlsCode: $(umlsCode).html()},
             dataType: "html"
           }).done(function(data) {
