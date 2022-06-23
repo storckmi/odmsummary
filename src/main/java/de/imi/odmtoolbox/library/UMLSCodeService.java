@@ -31,6 +31,7 @@ public class UMLSCodeService {
      * @param code The UMLS code for which the preferred name should be
      * searched.
      * @return The preferred name for the given UMLS Code
+     * @throws java.lang.Exception
      */
     public String getPreferredName(String code) throws Exception {
         return this.doRequest(code).getString("STR");

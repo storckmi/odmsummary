@@ -62,6 +62,7 @@ public class SummaryController {
      * @param imageFiles The ODM files for the comparison.
      * @param model The model, which holds information for the view.
      * @return The view showing the results of the comparison.
+     * @throws java.text.ParseException
      */
     @RequestMapping(value = "/summary", method = RequestMethod.POST)
     public String summarizeODMFiles(MultiPartFileUploadBean imageFiles, Model model) throws ParseException {
