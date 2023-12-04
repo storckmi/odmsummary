@@ -36,35 +36,17 @@
     <util:properties id="propertyConfigurer" location="classpath:odmtoolbox.properties"/>
     <context:property-placeholder properties-ref="propertyConfigurer" />
     
+    <mvc:resources location="/css/" mapping="/css/**"/>
+    <mvc:resources location="/js/" mapping="/js/**"/>
+    
     <!-- Use @Controller annotations for MVC controller definitions -->
     <mvc:annotation-driven />
     <context:annotation-config />
     <task:annotation-driven/>
-
-    <mvc:resources location="/css/" mapping="css/**"/>
-    <mvc:resources location="/js/" mapping="js/**"/>
-     
-    <bean id="tilesConfigurer" 
-          class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
-        <property name="definitions">
-            <list>
-                <value>/WEB-INF/tiles-def.xml</value>
-            </list>
-        </property>
-    </bean>   
-  
+    
     <!-- View resolver -->
-    <bean class=
-     "org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
- 
-    <bean id="multipartResolver"
-          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-
-        <!-- one of the properties available; the maximum file size in bytes -->
-        <property name="maxUploadSize" value="200000000"/>
-    </bean>
- 
 </beans>
