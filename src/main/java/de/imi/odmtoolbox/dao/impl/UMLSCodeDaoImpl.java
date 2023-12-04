@@ -3,8 +3,8 @@ package de.imi.odmtoolbox.dao.impl;
 import de.imi.odmtoolbox.dao.UMLSCodeDao;
 import de.imi.odmtoolbox.model.UMLSCode;
 import java.util.List;
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
